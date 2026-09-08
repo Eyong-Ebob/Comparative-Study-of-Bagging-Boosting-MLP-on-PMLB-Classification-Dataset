@@ -117,12 +117,4 @@ Note: Logistic Regression and Random Forest were evaluated with random search; X
 
 
 
-=======
-# Comparative-Study-of-Bagging-Boosting-MLP-on-PMLB-Classification-Dataset
->>>>>>> 7990d02227c7a2a676a64334ff3e6d506c8215b5
-=======
-# Comparative-Study-of-Bagging-Boosting-MLP-on-PMLB-Classification-Dataset
->>>>>>> 7990d02227c7a2a676a64334ff3e6d506c8215b5
-=======
-# Comparative-Study-of-Bagging-Boosting-MLP-on-PMLB-Classification-Dataset
->>>>>>> 7990d02227c7a2a676a64334ff3e6d506c8215b5
+
