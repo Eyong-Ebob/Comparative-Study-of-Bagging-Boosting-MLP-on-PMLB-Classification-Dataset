@@ -1,0 +1,2 @@
+dataset_file,samples,features,classes,cv_splits,seed,oof_accuracy,oof_balanced_accuracy,oof_macro_f1,fold_accuracy_mean,fold_accuracy_std,fold_balanced_accuracy_mean,fold_balanced_accuracy_std,fold_macro_f1_mean,fold_macro_f1_std
+allbp.tsv.gz,3772,29,3,10,90483257,0.9705726405090138,0.6627449698965541,0.6996733749539437,0.9705745722987104,0.004493088913037304,0.6529058025179908,0.13305945227892962,0.658558923919357,0.11538098356775627

@@ -221,7 +221,6 @@ __marimo__/
 download_log.txt
 *.log
 *.pid
-results/
 _report_figs/
 .vscode/
 archive/

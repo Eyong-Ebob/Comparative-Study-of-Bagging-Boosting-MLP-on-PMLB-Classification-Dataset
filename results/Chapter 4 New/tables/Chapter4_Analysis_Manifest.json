@@ -1,0 +1,19 @@
+{
+  "primary_metric": "Balanced Accuracy",
+  "principal_sample_size": 69,
+  "models": [
+    "MLP",
+    "Random Forest",
+    "XGBoost",
+    "Logistic Regression"
+  ],
+  "rq2_primary_difficulty_definition": "Preselected Bottom datasets derived from poor baseline-model performance",
+  "rq2_secondary_robustness_definition": "1 - max(LR_BA, RF_BA, XGB_BA)",
+  "mlp_competitiveness": "MLP_BA - max(LR_BA, RF_BA, XGB_BA)",
+  "omnibus_test": "Friedman",
+  "posthoc_test": "Nemenyi, conditional on valid significant Friedman result",
+  "planned_pairwise_test": "Wilcoxon signed-rank",
+  "multiple_testing_correction": "Holm",
+  "rq3_primary_target": "MLP_vs_Best",
+  "meta_model": "RandomForestRegressor with RepeatedKFold validation and held-out permutation importance"
+}

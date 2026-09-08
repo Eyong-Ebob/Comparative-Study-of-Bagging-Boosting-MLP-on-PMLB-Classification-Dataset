@@ -1,0 +1,4 @@
+Comparison,N,MLP wins,MLP losses,Ties,Wilcoxon W,Raw p-value,Median BA difference,Q1 difference,Q3 difference,Rank-biserial effect,Holm-adjusted p-value,Significant after Holm,Interpretation
+MLP vs Random Forest,69,35,34,0,1111.0,0.5639608556548943,0.0002604609999999896,-0.031166666999999926,0.03860271500000001,0.07991718426501035,0.5639608556548943,False,No statistically significant paired difference detected
+MLP vs XGBoost,69,60,9,0,236.0,6.301757927722818e-09,0.127896942,0.060833333000000045,0.21661347099999995,0.8045548654244307,1.8905273783168454e-08,True,Statistically significant paired difference detected
+MLP vs Logistic Regression,69,49,20,0,604.0,0.00030821696831287123,0.029483935000000017,-0.00040278699999996004,0.096296296,0.4997929606625259,0.0006164339366257425,True,Statistically significant paired difference detected

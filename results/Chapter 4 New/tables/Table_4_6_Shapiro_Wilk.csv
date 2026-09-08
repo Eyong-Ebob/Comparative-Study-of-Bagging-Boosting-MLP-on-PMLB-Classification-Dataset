@@ -1,0 +1,5 @@
+Model,W-statistic,p-value,Interpretation
+MLP,0.8788554520676288,7.120466184255763e-06,Departure from normality detected
+Random Forest,0.8085783466213059,4.799013043604524e-08,Departure from normality detected
+XGBoost,0.8508154785090696,8.235903645478547e-07,Departure from normality detected
+Logistic Regression,0.8931055309400631,2.3688955269353214e-05,Departure from normality detected
