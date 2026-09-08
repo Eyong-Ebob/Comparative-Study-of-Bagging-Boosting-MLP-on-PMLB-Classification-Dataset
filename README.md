@@ -62,7 +62,7 @@ But: "Are MLPs competitive when datasets are larger, more continuous, less categ
 - `selection_justification_condition_based`: Natural language reason linking dataset to hypothesis (e.g., "high-dimensional numeric dataset where MLPs may compete with trees")
 - `selected_for_mlp_eval`: Boolean flag (True for top 40; False for others)
 
-### Expected Condition Coverage (Top 40)
+### Expected Condition Coverage 
 | Dimension | Expected | Count |
 |-----------|----------|-------|
 | **Small** (<1k rows) | Overfitting tests | ~13 |
