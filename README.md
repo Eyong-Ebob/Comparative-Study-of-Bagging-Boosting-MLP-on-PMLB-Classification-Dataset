@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
 ## Downloading the benchmark data
 
 Please refer to [PMLB](https://github.com/EpistasisLab/penn-ml-benchmarks) to gain access to the curated datasets from this study. PMLB provides an easy-to-use Python interface to download the datasets.
