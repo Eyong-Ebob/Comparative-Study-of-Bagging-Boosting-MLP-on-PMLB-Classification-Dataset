@@ -1,0 +1,5 @@
+,Joint 1st,2nd,Other ranks
+MLP,28,25,16
+Random Forest,29,18,22
+XGBoost,5,7,57
+Logistic Regression,13,17,39

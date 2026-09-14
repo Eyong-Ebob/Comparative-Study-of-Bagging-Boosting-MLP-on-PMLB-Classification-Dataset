@@ -1,0 +1,4 @@
+,win,loss,tie
+LogisticRegression,45,28,0
+RandomForest,33,36,2
+XGB,57,8,0

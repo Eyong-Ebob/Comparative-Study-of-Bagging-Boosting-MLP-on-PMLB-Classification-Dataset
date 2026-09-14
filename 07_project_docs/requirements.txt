@@ -1,0 +1,12 @@
+numpy
+pandas
+scipy
+scikit-learn
+matplotlib
+torch
+xgboost
+pmlb
+requests
+python-docx
+jupyter
+ipykernel

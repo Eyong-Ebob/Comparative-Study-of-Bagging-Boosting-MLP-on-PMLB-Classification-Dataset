@@ -1,0 +1,55 @@
+Chapter 5 Analysis Summary
+========================
+
+Total datasets in master results: 128
+MLP values available: 73 (missing: 55)
+
+Mean balanced accuracy:
+  LogisticRegression: 0.7368 (n=128)
+  RandomForest: 0.7841 (n=125)
+  XGB: 0.6185 (n=99)
+  MLP: 0.8189 (n=73)
+Median balanced accuracy:
+  LogisticRegression: 0.7513
+  RandomForest: 0.8273
+  XGB: 0.5613
+  MLP: 0.8845
+
+MLP pairwise wins/losses (available comparisons):
+  MLP vs LogisticRegression: 45 wins, 28 losses, 0 ties
+  MLP vs RandomForest: 33 wins, 36 losses, 2 ties
+  MLP vs XGB: 57 wins, 8 losses, 0 ties
+
+Wilcoxon paired test results:
+  LogisticRegression_vs_RandomForest: stat=2000.000, p=2.93e-06, n=125
+  LogisticRegression_vs_XGB: stat=553.000, p=5.33e-11, n=99
+  LogisticRegression_vs_MLP: stat=814.000, p=0.00318, n=73
+  RandomForest_vs_XGB: stat=189.000, p=2.01e-14, n=97
+  RandomForest_vs_MLP: stat=1182.000, p=0.879, n=71
+  XGB_vs_MLP: stat=161.000, p=2.58e-09, n=65
+
+Mean rank (lower is better):
+  LogisticRegression: 2.1055
+  RandomForest: 1.7320
+  XGB: 3.2626
+  MLP: 2.0000
+
+Spearman rank correlations:
+  MLP vs LogisticRegression: 0.7816
+  MLP vs RandomForest: 0.8252
+  MLP vs XGB: 0.6803
+  MLP vs MLP: 1.0000
+
+Regression MLP ~ RF + XGB:
+  R^2 = 0.7916
+  intercept = 0.1108
+  RandomForest coef = 0.8408
+  XGB coef = 0.0289
+
+Interpretation:
+  - MLP is strongest on the available sample, with mean BA above Random Forest and Logistic Regression.
+  - MLP wins more often than it loses against Logistic Regression and XGBoost, while Random Forest remains a close competitor.
+  - The Wilcoxon test shows MLP is statistically better than LR and XGB, but not significantly different from RF on the available paired datasets.
+  - Mean rank confirms ranking: Random Forest first, MLP second, Logistic Regression third, XGBoost fourth.
+  - Spearman correlations indicate MLP performance is more closely aligned with Random Forest than XGBoost.
+  - The regression model explains ~79% of MLP variance using RF and XGB, with RF carrying most of the predictive weight.

@@ -1,0 +1,2 @@
+cv_accuracy,cv_balanced_accuracy,cv_macro_f1,fold_accuracy_mean,fold_accuracy_std,fold_balanced_accuracy_mean,fold_balanced_accuracy_std,fold_macro_f1_mean,fold_macro_f1_std
+0.7307692307692307,0.6285338015803337,0.6376232084382354,0.7304187192118227,0.0663002078556145,0.6270436507936508,0.10393917145953026,0.6229743945953888,0.12447003076069642

@@ -1,0 +1,7 @@
+pair,wilcoxon_stat,p_value,n
+LogisticRegression_vs_RandomForest,813.0,0.011953556338587627,71
+LogisticRegression_vs_XGB,281.0,6.453808722544166e-07,65
+LogisticRegression_vs_MLP,814.0,0.003183516123159499,73
+RandomForest_vs_XGB,64.0,5.758227967863839e-10,63
+RandomForest_vs_MLP,1182.0,0.8788216672122305,71
+XGB_vs_MLP,161.0,2.5754899727035483e-09,65

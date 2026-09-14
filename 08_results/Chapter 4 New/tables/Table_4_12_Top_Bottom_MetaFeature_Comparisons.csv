@@ -1,0 +1,6 @@
+Feature,Top median,Bottom median,Mann-Whitney U,Raw p-value,Holm-adjusted p-value,Significant after Holm
+Rows,973.0,1406.0,602.5,0.7321202040971966,1.0,False
+Features,20.0,20.0,635.0,0.4591403826318001,1.0,False
+Classes,2.0,2.0,640.5,0.36282088420446723,1.0,False
+Imbalance,0.000788489,0.0033209479999999998,488.0,0.28701746888773383,1.0,False
+Feat_Row_Ratio,0.017578125,0.0125,585.0,0.8978638758267745,1.0,False

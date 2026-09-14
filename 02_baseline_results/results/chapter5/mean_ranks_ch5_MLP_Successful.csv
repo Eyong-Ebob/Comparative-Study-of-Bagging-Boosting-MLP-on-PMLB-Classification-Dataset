@@ -1,0 +1,5 @@
+,mean_rank
+LogisticRegression,2.3904109589041096
+RandomForest,2.007042253521127
+XGB,3.4923076923076923
+MLP,2.0
