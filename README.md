@@ -1,6 +1,4 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
+
 ## Downloading the benchmark data
 
 Please refer to [PMLB](https://github.com/EpistasisLab/penn-ml-benchmarks) to gain access to the curated datasets from this study. PMLB provides an easy-to-use Python interface to download the datasets.
@@ -49,7 +47,7 @@ But: "Are MLPs competitive when datasets are larger, more continuous, less categ
 - `strata`: Full condition assignment (e.g., `small+low_dim+numeric+balanced+binary`)
 
 #### Baseline Classifier Performance (Fair Comparison)
-- `xgb_accuracy`, `rf_accuracy`, `logreg_accuracy`: Best accuracy per baseline
+- `xgb_accuracy`, `rf_accuracy`, `logreg_accuracy`: Best Balanced accuracy per baseline
 - `xgb_macro_f1`, `rf_macro_f1`, `logreg_macro_f1`: Class-balanced F1 per baseline
 - `xgb_balanced_accuracy`, `rf_balanced_accuracy`, `logreg_balanced_accuracy`: Balanced accuracy per baseline
 - `n_models_success`: Count of successful classifiers (3 = all; selection requirement)
@@ -122,10 +120,3 @@ Note: Logistic Regression and Random Forest were evaluated with random search; X
 
 =======
 # Comparative-Study-of-Bagging-Boosting-MLP-on-PMLB-Classification-Dataset
->>>>>>> 7990d02227c7a2a676a64334ff3e6d506c8215b5
-=======
-# Comparative-Study-of-Bagging-Boosting-MLP-on-PMLB-Classification-Dataset
->>>>>>> 7990d02227c7a2a676a64334ff3e6d506c8215b5
-=======
-# Comparative-Study-of-Bagging-Boosting-MLP-on-PMLB-Classification-Dataset
->>>>>>> 7990d02227c7a2a676a64334ff3e6d506c8215b5
