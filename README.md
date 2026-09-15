@@ -96,25 +96,6 @@ With this stratified selection, you can answer:
 
 The parameter ranges below are the actual search spaces used to generate the benchmark results. They are defined in the corresponding scripts under `Baseline_model_codes/` and are therefore the source of truth for the reported experiments.
 
-| Model | Hyperparameter | Search values / sampling rule | Source |
-|---|---|---|---|
-| Logistic Regression | `C` | `np.random.uniform(low=1e-10, high=10.0, size=num_param_combinations)` | `Baseline_model_codes/random_search/LogisticRegression.py` |
-|  | `penalty` | `['l1', 'l2']` sampled randomly | `Baseline_model_codes/random_search/LogisticRegression.py` |
-|  | `fit_intercept` | `True` or `False` sampled randomly | `Baseline_model_codes/random_search/LogisticRegression.py` |
-|  | `dual` | `False` when `penalty != 'l2'`; otherwise sampled randomly from `True` or `False` | `Baseline_model_codes/random_search/LogisticRegression.py` |
-|  | `solver` | fixed at `liblinear` | `Baseline_model_codes/random_search/LogisticRegression.py` |
-| Random Forest | `n_estimators` | sampled from `range(50, 1001, 50)` | `Baseline_model_codes/random_search/RandomForestClassifier.py` |
-|  | `min_impurity_decrease` | sampled from `np.random.exponential(scale=0.01, size=num_param_combinations)` | `Baseline_model_codes/random_search/RandomForestClassifier.py` |
-|  | `max_features` | sampled from `np.arange(0.01, 1.0, 0.01)` plus `['sqrt', 'log2', None]` | `Baseline_model_codes/random_search/RandomForestClassifier.py` |
-|  | `criterion` | `['gini', 'entropy']` sampled randomly | `Baseline_model_codes/random_search/RandomForestClassifier.py` |
-|  | `max_depth` | sampled from `range(1, 51)` plus `None` | `Baseline_model_codes/random_search/RandomForestClassifier.py` |
-| XGBoost | `n_estimators` | `[10, 50, 100, 500]` | `Baseline_model_codes/grid_search/XGBClassifier.py` |
-|  | `learning_rate` | `[0.01, 0.1, 0.5, 1.0, 10.0, 50.0, 100.0]` | `Baseline_model_codes/grid_search/XGBClassifier.py` |
-|  | `gamma` | `np.arange(0.0, 0.51, 0.05)` | `Baseline_model_codes/grid_search/XGBClassifier.py` |
-|  | `max_depth` | `[1, 2, 3, 4, 5, 10, 20, 50, None]` | `Baseline_model_codes/grid_search/XGBClassifier.py` |
-|  | `subsample` | `np.arange(0.0, 1.01, 0.1)` | `Baseline_model_codes/grid_search/XGBClassifier.py` |
-
-
 
 
 =======
