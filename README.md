@@ -1,131 +1,296 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-## Downloading the benchmark data
+# Comparative Study of Bagging, Boosting, and MLPs on PMLB Classification Datasets
 
-Please refer to [PMLB](https://github.com/EpistasisLab/penn-ml-benchmarks) to gain access to the curated datasets from this study. PMLB provides an easy-to-use Python interface to download the datasets.
+This repository reproduces the end-to-end experimental workflow of the M.Sc research project. The goal is to evaluate when multilayer perceptrons (MLPs) are competitive with tree-based ensemble methods on tabular classification datasets from PMLB.
 
-## Dataset Evaluation for MLP Competitiveness Study
+The study compares four model families:
+- Logistic Regression
+- Random Forest
+- XGBoost
+- MLPClassifier
 
-This iteration of the project focuses on determining **under what dataset conditions MLP classifiers are competitive with tree-based ensemble methods** on public tabular classification datasets.
+The project is designed to answer a specific research question:
 
-### Key Question
-The dissertation does not aim to beat SOTA. Instead, it asks: **"On which dataset conditions do MLPs compete with or outperform tree ensembles?"**
+> Under which dataset conditions do MLPs compete with or outperform bagging and boosting methods?
 
-Not: "Model X got accuracy Y."
-But: "Are MLPs competitive when datasets are larger, more continuous, less categorical, more linearly separable, less imbalanced, or higher dimensional?"
+This is not a generic benchmarking repository. It follows the thesis workflow: dataset profiling, baseline benchmarking, dataset subgroup selection, MLP evaluation, and final comparative analysis.
 
-### Dataset Selection Strategy
+---
 
-**Purpose**: Maximize diversity across dataset conditions (size, dimensionality, feature type, class balance) while ensuring all datasets are learnable and thoroughly evaluated.
+## 1. Research objective
 
-**Selection Process**:
-1. Filter to datasets successfully evaluated by all three baseline classifiers (XGBoost, RandomForest, LogisticRegression) → 128 usable datasets
-2. Stratify across five condition dimensions:
-   - **Size**: small (low, medium, large 
-   - **Dimensionality**: low, mid, high
-   - **Feature type**: numeric, categorical, mixed
-   - **Class imbalance**: balanced, moderate, high
-   - **Classes**: binary, multiclass-few, multiclass-many.
-3. Within each non-empty stratum, select the dataset with best composite performance score
-4. Fill remainder with highest-scoring runners-up
-5. Result: datasets** covering condition space
+The thesis focuses on model competitiveness under controlled dataset conditions rather than raw leaderboard performance.
 
-### Column Meanings (dataset_manifest.csv)
+The analysis asks whether MLPs are competitive when datasets are:
+- larger
+- higher-dimensional
+- more numeric than categorical
+- less imbalanced
+- more linearly separable
+- more complex in class structure
 
-#### Dataset Properties (Conditions Under Test)
-- `rows`: Training samples. **Why**: MLPs scale better on large data than greedy tree splits.
-- `features`: Dimensionality. **Why**: Trees struggle in high-d (curse of dimensionality); MLPs may compete.
-- `feature_type` (numeric | categorical | mixed): **Why**: Trees naturally handle categorical; MLPs require encoding (overhead).
-- `classes`: Classification complexity. **Why**: Loss scales with log(classes); affects both methods differently.
-- `class_imbalance` [0, 1): Squared distance from perfect balance. **Why**: Trees/ensembles handle imbalance well; MLPs require loss weighting/sampling.
-- `missing_values_ratio`: **Why**: Trees are inherently robust; MLPs require imputation (overhead).
+The final comparison is based on paired dataset-level evaluation, with Balanced Accuracy as the primary metric.
 
-#### Stratification Bins
-- `size_bin`: small | medium | large
-- `dim_bin`: low_dim | mid_dim | high_dim
-- `imb_bin`: balanced | moderate_imb | high_imb
-- `class_bin`: binary | multiclass_few | multiclass_many
-- `strata`: Full condition assignment (e.g., `small+low_dim+numeric+balanced+binary`)
+---
 
-#### Baseline Classifier Performance (Fair Comparison)
-- `xgb_accuracy`, `rf_accuracy`, `logreg_accuracy`: Best accuracy per baseline
-- `xgb_macro_f1`, `rf_macro_f1`, `logreg_macro_f1`: Class-balanced F1 per baseline
-- `xgb_balanced_accuracy`, `rf_balanced_accuracy`, `logreg_balanced_accuracy`: Balanced accuracy per baseline
-- `n_models_success`: Count of successful classifiers (3 = all; selection requirement)
+## 2. Thesis workflow implemented in code
 
-#### Multi-Model Consensus & Selection
-- `mean_accuracy_3models`: Average accuracy benchmark for MLPs to beat
-- `mean_macro_f1_3models`, `mean_balanced_accuracy_3models`: Consensus class-balanced metrics
-- `std_accuracy_3models`: Model disagreement (low = clean signals; high = method-dependent)
-- `cond_selection_score`: Composite score (40% accuracy, 30% consensus, 30% balanced accuracy) within each stratum
-- `selection_rank_top40`: Position in final 40 (1-40) for MLP evaluation
+The repository follows the exact research pipeline:
 
-#### Justifications & Selection Metadata
-- `selection_justification_condition_based`: Natural language reason linking dataset to hypothesis (e.g., "high-dimensional numeric dataset where MLPs may compete with trees")
-- `selected_for_mlp_eval`: Boolean flag (True for top 40; False for others)
+1. Download and profile PMLB classification datasets
+2. Build a dataset manifest with structural metadata
+3. Evaluate baseline models (Logistic Regression, Random Forest, XGBoost)
+4. Extract best-performing configuration per dataset and classifier
+5. Select representative top and bottom dataset groups for MLP analysis
+6. Run large-scale MLP hyperparameter search
+7. Aggregate outputs and compare MLP against baseline families
+8. Validate results and generate final reporting artifacts
 
-### Expected Condition Coverage (Top 40)
-| Dimension | Expected | Count |
-|-----------|----------|-------|
-| **Small** (<1k rows) | Overfitting tests | ~13 |
-| **Medium** (1k-20k) | Balanced regime | ~18 |
-| **Large** (>20k) | Scalability tests | ~9 |
-| **Low-dim** (≤10) | Tree advantages | ~11 |
-| **Mid-dim** (11-100) | Balanced | ~19 |
-| **High-dim** (>100) | NN potential | ~10 |
-| **Numeric-only** | NN sweet spot | ~40 |
-| **Well-balanced** | Clean signals | ~14 |
-| **Moderate imbalance** | Ensemble stress | ~13 |
-| **Severe imbalance** | Tree advantage | ~13 |
-| **Binary** | Simpler | ~21 |
-| **Multiclass** (3-4) | Medium | ~12 |
-| **Many-class** (5+) | Complex | ~7 |
+This is the implemented logic behind the thesis methodology.
 
-### Output Files
-- `results/final_40_datasets_for_mlp_condition_based.csv`: Metadata for all selected datasets + condition assignments
-- `dataset_manifest.csv`: Full 130-dataset metadata with selection fields; filter via `selected_for_mlp_eval`
+---
 
-### Dissertation Analysis Framework
-With this stratified selection, you can answer:
-1. **"Are MLPs competitive on large-scale datasets?"** → Compare across `size_bin`
-2. **"Do MLPs handle high-dimensional data?"** → Compare across `dim_bin`
-3. **"Can MLPs beat trees on numeric data?"** → Subset `feature_type == numeric`
-4. **"Does imbalance hurt MLPs more?"** → Compare across `imb_bin`, track metric degradation
-5. **"Which conditions favor MLPs vs trees?"** → Stratify by `strata`, compute win rates per condition
+## 3. Project structure
 
-### Search spaces used for the baseline classifiers
+```text
+.
+├── 00_data/                     # raw data and curated dataset folders
+├── 01_baseline_search/          # baseline search scripts for LR, RF, XGB
+├── 02_baseline_results/         # baseline benchmark outputs and rankings
+├── 03_selected_subset/          # selected dataset groups for deeper analysis
+├── 04_mlp_search/               # MLP hyperparameter search scripts
+├── 05_analysis/                 # comparison, validation, and aggregation scripts
+├── 06_legacy/                   # historical or superseded code
+├── 07_project_docs/             # thesis chapters and methodology notes
+├── 08_results/                  # final tables and dataset-level outputs
+├── metafeatures/                # dataset feature extraction utilities
+├── notebooks/                   # exploratory and analysis notebooks
+├── scripts/                     # workflow support scripts
+├── requirements.txt             # project dependencies
+├── LICENSE                      # project license
+├── README.md                    # main project documentation
+├── _report_figs/                # generated figures and reports
+├── archive/                     # archived materials
+└── .gitignore
+```
 
-The parameter ranges below are the actual search spaces used to generate the benchmark results. They are defined in the corresponding scripts under `Baseline_model_codes/` and are therefore the source of truth for the reported experiments.
+---
 
-| Model | Hyperparameter | Search values / sampling rule | Source |
-|---|---|---|---|
-| Logistic Regression | `C` | `np.random.uniform(low=1e-10, high=10.0, size=num_param_combinations)` | `Baseline_model_codes/random_search/LogisticRegression.py` |
-|  | `penalty` | `['l1', 'l2']` sampled randomly | `Baseline_model_codes/random_search/LogisticRegression.py` |
-|  | `fit_intercept` | `True` or `False` sampled randomly | `Baseline_model_codes/random_search/LogisticRegression.py` |
-|  | `dual` | `False` when `penalty != 'l2'`; otherwise sampled randomly from `True` or `False` | `Baseline_model_codes/random_search/LogisticRegression.py` |
-|  | `solver` | fixed at `liblinear` | `Baseline_model_codes/random_search/LogisticRegression.py` |
-| Random Forest | `n_estimators` | sampled from `range(50, 1001, 50)` | `Baseline_model_codes/random_search/RandomForestClassifier.py` |
-|  | `min_impurity_decrease` | sampled from `np.random.exponential(scale=0.01, size=num_param_combinations)` | `Baseline_model_codes/random_search/RandomForestClassifier.py` |
-|  | `max_features` | sampled from `np.arange(0.01, 1.0, 0.01)` plus `['sqrt', 'log2', None]` | `Baseline_model_codes/random_search/RandomForestClassifier.py` |
-|  | `criterion` | `['gini', 'entropy']` sampled randomly | `Baseline_model_codes/random_search/RandomForestClassifier.py` |
-|  | `max_depth` | sampled from `range(1, 51)` plus `None` | `Baseline_model_codes/random_search/RandomForestClassifier.py` |
-| XGBoost | `n_estimators` | `[10, 50, 100, 500]` | `Baseline_model_codes/grid_search/XGBClassifier.py` |
-|  | `learning_rate` | `[0.01, 0.1, 0.5, 1.0, 10.0, 50.0, 100.0]` | `Baseline_model_codes/grid_search/XGBClassifier.py` |
-|  | `gamma` | `np.arange(0.0, 0.51, 0.05)` | `Baseline_model_codes/grid_search/XGBClassifier.py` |
-|  | `max_depth` | `[1, 2, 3, 4, 5, 10, 20, 50, None]` | `Baseline_model_codes/grid_search/XGBClassifier.py` |
-|  | `subsample` | `np.arange(0.0, 1.01, 0.1)` | `Baseline_model_codes/grid_search/XGBClassifier.py` |
+## 4. Requirements
 
-Note: Logistic Regression and Random Forest were evaluated with random search; XGBoost used exhaustive grid search. 
+Create a Python environment and install dependencies:
 
+```bash
+pip install -r requirements.txt
+```
 
+Required packages include:
+- numpy
+- pandas
+- scipy
+- scikit-learn
+- matplotlib
+- xgboost
+- pmlb
+- torch
+- jupyter
 
-=======
-# Comparative-Study-of-Bagging-Boosting-MLP-on-PMLB-Classification-Dataset
->>>>>>> 7990d02227c7a2a676a64334ff3e6d506c8215b5
-=======
-# Comparative-Study-of-Bagging-Boosting-MLP-on-PMLB-Classification-Dataset
->>>>>>> 7990d02227c7a2a676a64334ff3e6d506c8215b5
-=======
-# Comparative-Study-of-Bagging-Boosting-MLP-on-PMLB-Classification-Dataset
->>>>>>> 7990d02227c7a2a676a64334ff3e6d506c8215b5
+---
+
+## 5. Reproducible execution workflow
+
+Use the scripts in the order below to reproduce the thesis pipeline.
+
+### Step 1: Prepare the dataset pool
+
+The project assumes the PMLB dataset repository is available and accessible through the PMLB package.
+
+Use the dataset loading and metadata scripts in the project workflow to build the dataset manifest and characterize each dataset.
+
+Relevant project code:
+- `metafeatures/`
+- `scripts/download_datasets.py`
+- `00_data/`
+
+Expected output:
+- dataset manifest containing metadata such as rows, features, classes, imbalance, and feature type
+
+---
+
+### Step 2: Run baseline model searches
+
+Baseline experimentation is implemented in:
+- `01_baseline_search/LogisticRegression.py`
+- `01_baseline_search/RandomForestClassifier.py`
+- `01_baseline_search/XGBClassifier.py`
+- `01_baseline_search/evaluate_model.py`
+
+Run the classifiers in the project’s benchmark workflow to produce baseline results.
+
+Example flow:
+
+```bash
+python 01_baseline_search/LogisticRegression.py
+python 01_baseline_search/RandomForestClassifier.py
+python 01_baseline_search/XGBClassifier.py
+```
+
+Expected output:
+- per-dataset classifier outputs
+- best configuration per dataset-model pair
+- baseline leaderboards in `02_baseline_results/`
+
+---
+
+### Step 3: Construct the comparison manifest
+
+After the baseline results are generated, merge the best performance rows into a single dataset manifest that stores:
+- model performance metrics
+- dataset metadata
+- condition assignments
+- selection flags
+
+The results are stored under:
+- `08_results/dataset_manifest.csv`
+- `08_results/Master_Performance_Table.csv`
+
+These files form the basis for selecting the top and bottom dataset groups used in the MLP experiments.
+
+---
+
+### Step 4: Select dataset groups for MLP analysis
+
+The study divides datasets into representative analysis groups based on performance and dataset conditions.
+
+This stage is implemented through the selection and aggregation logic in:
+- `03_selected_subset/`
+- `02_baseline_results/`
+- `08_results/`
+
+The output should include the dataset lists used for:
+- top-group MLP evaluation
+- bottom-group MLP evaluation
+
+---
+
+### Step 5: Run the MLP hyperparameter search
+
+The MLP search is implemented in:
+- `04_mlp_search/evaluate_mlp_hyperparameter_combinations_top.py`
+- `04_mlp_search/evaluate_mlp_hyperparameter_combinations_bottom.py`
+- `04_mlp_search/mlp_hyperparameter_combinations.csv`
+
+These scripts evaluate a fixed MLP search space across the selected datasets using stratified 10-fold cross-validation.
+
+Run the top-group experiments:
+
+```bash
+python 04_mlp_search/evaluate_mlp_hyperparameter_combinations_top.py
+```
+
+Run the bottom-group experiments:
+
+```bash
+python 04_mlp_search/evaluate_mlp_hyperparameter_combinations_bottom.py
+```
+
+Expected outputs:
+- per-dataset MLP evaluation files
+- Balanced Accuracy, Accuracy, Macro F1, and runtime metrics
+- results stored under the dataset-specific folders and summary output tables
+
+---
+
+### Step 6: Aggregate and validate results
+
+Use the analysis stage to combine evaluation outputs and validate consistency.
+
+Relevant scripts:
+- `05_analysis/compare_central.py`
+- `05_analysis/validate_central.py`
+- `05_analysis/generate_evaluation_report.py`
+
+These scripts check that results are correctly consolidated and generate summary files for the final analysis.
+
+Example:
+
+```bash
+python 05_analysis/compare_central.py
+python 05_analysis/validate_central.py
+python 05_analysis/generate_evaluation_report.py
+```
+
+Expected output:
+- validated comparative tables
+- ranked MLP vs baseline comparisons
+- final reporting artifacts for the thesis analysis
+
+---
+
+## 6. Main output files
+
+The code generates the following research artifacts:
+
+- `08_results/dataset_manifest.csv`
+- `08_results/Master_Performance_Table.csv`
+- `08_results/LogisticRegression_ranked_by_balanced_accuracy.csv`
+- `08_results/RandomForestClassifier_ranked_by_balanced_accuracy.csv`
+- `08_results/XGBClassifier_ranked_by_balanced_accuracy.csv`
+- `08_results/mlp_best_results_all_seeds.csv`
+- dataset-specific MLP search outputs under `08_results/`
+
+These files are the main evidence used to compare model families and support the thesis conclusions.
+
+---
+
+## 7. Key methodological rules
+
+The project follows strict methodological controls:
+
+- stratified 10-fold cross-validation
+- same data splits across model families
+- preprocessing inside each fold to prevent leakage
+- Balanced Accuracy as the primary performance metric
+- Macro F1 and Accuracy as secondary metrics
+- model seed control for reproducibility
+- checkpointing and validation for large MLP runs
+
+This ensures that comparisons reflect model behavior rather than procedural artifacts.
+
+---
+
+## 8. Reproducibility checklist
+
+To reproduce the thesis workflow from scratch, complete the following sequence:
+
+1. install dependencies
+2. load PMLB datasets
+3. generate the dataset manifest
+4. run baseline searches for LR, RF, and XGB
+5. merge best baseline results into the master manifest
+6. select the representative dataset groups
+7. run MLP hyperparameter search on those groups
+8. aggregate results
+9. validate the final comparison tables
+10. prepare final analysis and thesis report
+
+---
+
+## 9. Thesis documentation
+
+The full methodological detail is captured in:
+
+- `07_project_docs/METHODOLOGY_CHAPTER.md`
+
+Use this as the canonical write-up for the experimental design and statistical analysis plan.
+
+---
+
+## 10. License
+
+This project is released under the repository license included in the root `LICENSE` file.
+
+---
+
+## 11. Practical note
+
+This repository is meant to be run as a complete experimental pipeline rather than as isolated notebooks. The code is the implementation of the thesis solution, and the workflow should be followed in the order above to reproduce the research findings.
