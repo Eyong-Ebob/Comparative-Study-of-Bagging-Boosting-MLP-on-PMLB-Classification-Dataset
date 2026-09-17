@@ -273,24 +273,13 @@ To reproduce the thesis workflow from scratch, complete the following sequence:
 9. validate the final comparison tables
 10. prepare final analysis and thesis report
 
----
 
-## 9. Thesis documentation
-
-The full methodological detail is captured in:
-
-- `07_project_docs/METHODOLOGY_CHAPTER.md`
-
-Use this as the canonical write-up for the experimental design and statistical analysis plan.
-
----
-
-## 10. License
+## 09. License
 
 This project is released under the repository license included in the root `LICENSE` file.
 
 ---
 
-## 11. Practical note
+## 10. Practical note
 
 This repository is meant to be run as a complete experimental pipeline rather than as isolated notebooks. The code is the implementation of the thesis solution, and the workflow should be followed in the order above to reproduce the research findings.
